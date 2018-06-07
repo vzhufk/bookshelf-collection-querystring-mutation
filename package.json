@@ -1,0 +1,11 @@
+{
+  "name": "bookshelf-filter-orderBy-plugin",
+  "version": "1.0.0",
+  "description": "Filter and OrderBy DB Collections Plugin for Bookshelf",
+  "main": "index.js",
+  "author": "Vadym Zhufiak",
+  "license": "MIT",
+  "dependencies": {
+    "jsep": "^0.3.4"
+  }
+}
