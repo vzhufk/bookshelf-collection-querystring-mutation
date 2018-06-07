@@ -1,5 +1,10 @@
 const jsep = require("jsep");
 
+const ORDER_DIRECTION = {
+  desc: "DESC",
+  asc: "ASC"
+};
+
 const FILTER_OPERATORS = {
   eq: "=",
   ne: "!=",
@@ -10,23 +15,16 @@ const FILTER_OPERATORS = {
   lk: "like",
   il: "ilike"
 };
+
+//JSEP pre config (I dont even know do I need it)
 for (let i in FILTER_OPERATORS) {
   jsep.addBinaryOp(i, 6);
 }
 
-const ORDER_DIRECTION = {
-  desc: "DESC",
-  asc: "ASC"
-};
-
-const _ = require("lodash"),
-  Crypto = require("crypto"),
-  CryptoUtil = require("./crypto-util");
-
 /**
  * Export the plugin.
  */
-export default (Bookshelf, options) => {
+const bcqm = (Bookshelf, options) => {
   const Model = Bookshelf.Model.prototype;
   Bookshelf.Model = Bookshelf.Model.extend({
     filter(expression) {
@@ -47,17 +45,15 @@ export default (Bookshelf, options) => {
           let value = node.right.value;
 
           if (!props.includes(field)) {
-            throw new QueryParseError(
-              "No such property `" + field + "` to filter."
-            );
+            throw new Error("No such property `" + field + "` to filter.");
           }
 
           if (hidden.includes(field)) {
-            throw new QueryParseError("Property `" + field + "` is private.");
+            throw new Error("Property `" + field + "` is private.");
           }
 
           if (!operation) {
-            throw new QueryParseError("This operation is not available.");
+            throw new Error("This operation is not available.");
           }
 
           return qb => {
@@ -73,7 +69,7 @@ export default (Bookshelf, options) => {
             }
           };
         } else {
-          throw new QueryParseError("Failed to parse to Logical Expression.");
+          throw new Error("Failed to parse to Logical Expression.");
         }
       }
 
@@ -93,13 +89,11 @@ export default (Bookshelf, options) => {
         part = part.split(" ");
         let field = part[0];
         if (!props.includes(field)) {
-          throw new QueryParseError(
-            "No such property `" + field + "` to orderBy."
-          );
+          throw new Error("No such property `" + field + "` to orderBy.");
         }
 
         if (hidden.includes(field)) {
-          throw new QueryParseError("Property `" + field + "` is private.");
+          throw new Error("Property `" + field + "` is private.");
         }
 
         let direction =
@@ -110,3 +104,5 @@ export default (Bookshelf, options) => {
     }
   });
 };
+
+module.exports = bcqm;

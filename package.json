@@ -1,11 +1,43 @@
 {
-  "name": "bookshelf-filter-orderBy-plugin",
-  "version": "1.0.0",
+  "name": "bookshelf-collection-querystring-mutation",
+  "version": "0.1.0",
   "description": "Filter and OrderBy DB Collections Plugin for Bookshelf",
-  "main": "index.js",
-  "author": "Vadym Zhufiak",
+  "main": "src/index.js",
+  "author": {
+    "name": "Vadym Zhufiak",
+    "email": "vzhufk@gmail.com",
+    "url": "https://github.com/vzhufk"
+  },
   "license": "MIT",
   "dependencies": {
     "jsep": "^0.3.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vzhufk/bookshelf-collection-querystring-mutation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/scoutforpets/bookshelf-collection-querystring-mutation/issues"
+  },
+  "homepage": "https://github.com/scoutforpets/bookshelf-collection-querystring-mutation",
+  "keywords": [
+    "bookshelf",
+    "knex",
+    "filter",
+    "orderBy",
+    "collection",
+    "plugin"
+  ],
+  "engines": {
+    "node": ">= 4.0.0"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "bookshelf": "^0.13.3",
+    "jest": "^23.1.0",
+    "knex": "^0.14.6",
+    "sqlite3": "^4.0.0"
   }
 }
