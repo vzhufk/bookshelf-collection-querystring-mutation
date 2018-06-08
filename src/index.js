@@ -44,14 +44,6 @@ const bcqm = (Bookshelf, options) => {
           let operation = FILTER_OPERATORS[node.operator];
           let value = node.right.value;
 
-          if (!props.includes(field)) {
-            throw new Error("No such property `" + field + "` to filter.");
-          }
-
-          if (hidden.includes(field)) {
-            throw new Error("Property `" + field + "` is private.");
-          }
-
           if (!operation) {
             throw new Error("This operation is not available.");
           }
@@ -88,14 +80,6 @@ const bcqm = (Bookshelf, options) => {
       for (let part of expression) {
         part = part.split(" ");
         let field = part[0];
-        if (!props.includes(field)) {
-          throw new Error("No such property `" + field + "` to orderBy.");
-        }
-
-        if (hidden.includes(field)) {
-          throw new Error("Property `" + field + "` is private.");
-        }
-
         let direction =
           (part[1] && ORDER_DIRECTION[part[1]]) || ORDER_DIRECTION.asc;
         this.query(qb => qb.orderBy(field, direction));
