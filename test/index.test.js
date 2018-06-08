@@ -79,5 +79,32 @@ describe("bookshelf-collection-query-mutation", () => {
       let items = await List.forge().fetch();
       expect(items.get("id")).toBe(data[0].id);
     });
+
+    test("select one order by name", async () => {
+      let items = await List.forge()
+        .orderBy("name")
+        .fetch();
+      expect(items.get("name")).toBe(
+        data.sort((a, b) => a.name > b.name)[0].name
+      );
+    });
+
+    test("select one order by price", async () => {
+      let items = await List.forge()
+        .orderBy("price")
+        .fetch();
+      expect(items.get("price")).toBe(
+        data.sort((a, b) => a.price > b.price)[0].price
+      );
+    });
+
+    test("select one order by qty", async () => {
+      let items = await List.forge()
+        .orderBy("qty")
+        .fetch();
+      expect(items.get("qty")).toBe(data.sort((a, b) => a.qty > b.qty)[0].qty);
+    });
   });
+
+  describe("filter and orderBy", () => {});
 });
