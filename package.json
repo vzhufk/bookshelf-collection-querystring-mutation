@@ -33,7 +33,7 @@
   },
   "scripts": {
     "test": "jest",
-    "prepublish": "yarn run test"
+    "prepare": "yarn run test"
   },
   "devDependencies": {
     "bookshelf": "^0.13.3",
