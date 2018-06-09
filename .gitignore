@@ -1,3 +1,4 @@
 node_modules
 test.sqlite3
-test.sqlite3
+yarn.lock
+yarn-error.log

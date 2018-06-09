@@ -29,7 +29,7 @@
     "plugin"
   ],
   "engines": {
-    "node": ">= 4.0.0"
+    "node": ">= 7.10.0"
   },
   "scripts": {
     "test": "jest"
