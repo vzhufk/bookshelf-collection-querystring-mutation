@@ -32,7 +32,8 @@
     "node": ">= 7.10.0"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "prepublish": "yarn run test"
   },
   "devDependencies": {
     "bookshelf": "^0.13.3",
