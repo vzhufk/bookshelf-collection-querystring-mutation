@@ -34,8 +34,7 @@ const bcqm = (
     ignoreErrors: false
   }
 ) => {
-  const Model = Bookshelf.Model.prototype;
-  Bookshelf.Model = Bookshelf.Model.extend({
+  const extend = {
     [options.filterName]: function(expression) {
       if (!expression) {
         return this;
@@ -127,7 +126,10 @@ const bcqm = (
       }
       return this;
     }
-  });
+  };
+
+  Bookshelf.Model = Bookshelf.Model.extend(extend);
+  Bookshelf.Collection = Bookshelf.Collection.extend(extend);
 };
 
 module.exports = bcqm;
