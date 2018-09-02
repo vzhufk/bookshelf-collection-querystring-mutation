@@ -24,16 +24,27 @@ for (let i in FILTER_OPERATORS) {
 /**
  * Export the plugin.
  */
-const bcqm = (
-  Bookshelf,
+const bcqm = (Bookshelf, options) => {
   options = {
     filterName: "filter",
     orderByName: "orderBy",
     hiddenPropsName: "hidden",
     allowedPropsName: "allowed",
-    ignoreErrors: false
-  }
-) => {
+    ignoreErrors: false,
+    errorCallback: err => {
+      throw err;
+    },
+    ...options
+  };
+
+  const createError = err => {
+    if (options.ignoreErrors) {
+      return;
+    }
+    console.log(`${options.errorCallback}`);
+    options.errorCallback(err);
+  };
+
   const extend = {
     [options.filterName]: function(expression) {
       if (!expression) {
@@ -82,9 +93,7 @@ const bcqm = (
             throw new Error(`Failed to parse to Logical Expression.`);
           }
         } catch (e) {
-          if (!options.ignoreErrors) {
-            throw e;
-          }
+          createError(e);
         }
       }
 
@@ -119,9 +128,7 @@ const bcqm = (
 
           this.query(qb => qb.orderBy(field, direction));
         } catch (e) {
-          if (!options.ignoreErrors) {
-            throw e;
-          }
+          createError(e);
         }
       }
       return this;
