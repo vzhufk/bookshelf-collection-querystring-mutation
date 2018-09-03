@@ -41,7 +41,6 @@ const bcqm = (Bookshelf, options) => {
     if (options.ignoreErrors) {
       return;
     }
-    console.log(`${options.errorCallback}`);
     options.errorCallback(err);
   };
 
