@@ -13,7 +13,8 @@ const FILTER_OPERATORS = {
   lt: "<",
   le: "<=",
   lk: "like",
-  il: "ilike"
+  il: "ilike",
+  in: "in"
 };
 
 //JSEP pre config (I dont even know do I need it)
@@ -63,6 +64,11 @@ const bcqm = (Bookshelf, options) => {
             let field = node.left.name;
             let operation = FILTER_OPERATORS[node.operator];
             let value = node.right.value;
+
+            // In Case it's array
+            if (node.right.type == "ArrayExpression") {
+              value = node.right.elements.map(v => v.value);
+            }
 
             if (!operation) {
               throw new Error(`'${node.operator}' operation is not available.`);

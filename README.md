@@ -73,8 +73,9 @@ Pattern: `field1 <operation> value [logical_opration] ...`
 | ge                   | Greater than or equal | price ge 10                                           |
 | lt                   | Less than             | price lt 20                                           |
 | le                   | Less than or equal    | price le 100                                          |
-| lk                   | Like                  | name lk "%gg%"                                        |
-| il                   | iLike                 | name il "%GG%"                                        |
+| lk                   | Like                  | name lk '%gg%'                                        |
+| il                   | iLike                 | name il '%GG%'                                        |
+| in                   | in                    | name in ['%GG%', 'Salad']                             |
 | Logical Operators    |                       |
 | and                  | Logical and           | price le 200 and price gt 3.5                         |
 | or                   | Logical or            | price le 3.5 or price gt 200                          |

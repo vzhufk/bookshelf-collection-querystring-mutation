@@ -62,11 +62,6 @@ describe("bookshelf-collection-query-mutation", () => {
 
   describe("Model", () => {
     describe("filter", () => {
-      test("select all", async () => {
-        let items = await new List().fetchAll();
-        expect(flatM(items)).toEqual(flatD(data));
-      });
-
       test("select items qty >= 2", async () => {
         let items = new List();
         items.filter("qty ge 2");
@@ -80,6 +75,15 @@ describe("bookshelf-collection-query-mutation", () => {
         items = await items.fetchAll();
         expect(flatM(items)).toEqual(
           flatD(data.filter(v => v.qty >= 2 && v.price >= 2))
+        );
+      });
+
+      test("select items that name in ['Eggs', 'Milk']", async () => {
+        let items = await new List()
+          .filter("name in ['Milk', 'Eggs']")
+          .fetchAll();
+        expect(flatM(items)).toEqual(
+          flatD(data.filter(v => ["Milk", "Eggs"].includes(v.name)))
         );
       });
 
@@ -109,6 +113,11 @@ describe("bookshelf-collection-query-mutation", () => {
     });
 
     describe("orderBy", () => {
+      test("select all", async () => {
+        let items = await new List().fetchAll();
+        expect(flatM(items)).toEqual(flatD(data));
+      });
+
       test("select all", async () => {
         let items = await new List().fetchAll();
         expect(flatM(items)).toEqual(flatD(data));
