@@ -1,5 +1,7 @@
 # Bookshelf Collection Querystring Mutation Plugin
 
+[![Build Status](https://travis-ci.com/vzhufk/bookshelf-collection-querystring-mutation.svg?branch=master)](https://travis-ci.com/vzhufk/bookshelf-collection-querystring-mutation)
+
 This Bookshelf plugin allows you to filter and sort your bookshelf instances directly from URL query string parameters.
 Using [jsep](https://www.npmjs.com/package/jsep) to parse query string logical expressions into QueryBuilder query.
 
