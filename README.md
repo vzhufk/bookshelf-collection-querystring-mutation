@@ -77,7 +77,9 @@ Pattern: `field1 <operation> value [logical_opration] ...`
 | le                   | Less than or equal    | price le 100                                          |
 | lk                   | Like                  | name lk '%gg%'                                        |
 | il                   | iLike                 | name il '%GG%'                                        |
-| in                   | in                    | name in ['%GG%', 'Salad']                             |
+| in                   | in                    | name in ['GG', 'Salad']                               |
+| is                   | Is (null)             | price is null                                         |
+| ns                   | Is Not (null)         | price ns null                                         |
 | Logical Operators    |                       |
 | and                  | Logical and           | price le 200 and price gt 3.5                         |
 | or                   | Logical or            | price le 3.5 or price gt 200                          |
@@ -122,6 +124,24 @@ Example: all products that have the name matching '_gg_':
 
 ```http
 GET /list?filter=name lk "%gg%"
+```
+
+Example: all products that have ids in array of [1, 2, 3]:
+
+```http
+GET /list?filter=id in [1, 2, 3]
+```
+
+Example: all products that have price is set to null:
+
+```http
+GET /list?filter=price is null
+```
+
+Example: all products that have price is not set to null:
+
+```http
+GET /list?filter=price sn null
 ```
 
 ## OrderBy
