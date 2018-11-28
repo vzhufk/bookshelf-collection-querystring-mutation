@@ -33,7 +33,8 @@ describe("bookshelf-collection-query-mutation", () => {
     { id: 4, name: "Apple", price: 1, qty: 3, barcode: "APL230010" },
     { id: 5, name: "Banana", price: 1.5, qty: 22, barcode: "BNA715315" },
     { id: 6, name: "Spam", price: 5, qty: 7, barcode: "SPM239742" },
-    { id: 7, name: "Salt", price: 2.78, qty: 1, barcode: "SLT110023" }
+    { id: 7, name: "Salt", price: 2.78, qty: 1, barcode: "SLT110023" },
+    { id: 8, name: "Fish", price: null }
   ];
 
   beforeAll(async () => {
@@ -69,6 +70,20 @@ describe("bookshelf-collection-query-mutation", () => {
         expect(flatM(items)).toEqual(flatD(data.filter(v => v.qty >= 2)));
       });
 
+      test("select items price is null", async () => {
+        let items = new List();
+        items.filter(`price is null`);
+        items = await items.fetchAll();
+        expect(flatM(items)).toEqual(flatD(data.filter(v => v.price === null)));
+      });
+
+      test("select items price is not null", async () => {
+        let items = new List();
+        items.filter(`price sn null`);
+        items = await items.fetchAll();
+        expect(flatM(items)).toEqual(flatD(data.filter(v => v.price !== null)));
+      });
+
       test("select items qty >= 2 and price >= 2", async () => {
         let items = new List();
         items.filter("qty ge 2 and price ge 2");
@@ -98,9 +113,11 @@ describe("bookshelf-collection-query-mutation", () => {
         );
       });
 
-      test("select items (qty >= 2 and price >= 2) or (qty < 2 and price < 2)", async () => {
+      test("select items ((qty >= 2 and price >= 2) or (qty < 2 and price < 2)) and price is not null", async () => {
         let items = new List();
-        items.filter(`(qty ge 2 and price ge 2) or (qty lt 2 and price lt 2)`);
+        items.filter(
+          `((qty ge 2 and price ge 2) or (qty lt 2 and price lt 2)) and price sn null`
+        );
         items = await items.fetchAll();
         expect(flatM(items)).toEqual(
           flatD(
@@ -126,22 +143,24 @@ describe("bookshelf-collection-query-mutation", () => {
       test("select items order by name", async () => {
         let items = await new List().orderBy("name").fetchAll();
         expect(flatM(items)).toEqual(
-          flatD(data.sort((a, b) => a.name > b.name))
+          flatD(
+            data.sort((a, b) =>
+              a.name > b.name ? 1 : a.name < b.name ? -1 : 0
+            )
+          )
         );
       });
 
       test("select items order by price", async () => {
         let items = await new List().orderBy("price").fetchAll();
         expect(flatM(items)).toEqual(
-          flatD(data.sort((a, b) => a.price > b.price))
+          flatD(data.sort((a, b) => a.price - b.price))
         );
       });
 
       test("select items order by qty", async () => {
         let items = await new List().orderBy("qty").fetchAll();
-        expect(flatM(items)).toEqual(
-          flatD(data.sort((a, b) => a.qty >= b.qty))
-        );
+        expect(flatM(items)).toEqual(flatD(data.sort((a, b) => a.qty - b.qty)));
       });
 
       test("select one order by name, qty, price", async () => {
@@ -149,9 +168,9 @@ describe("bookshelf-collection-query-mutation", () => {
         expect(flatM(items)).toEqual(
           flatD(
             data
-              .sort((a, b) => a.price > b.price)
-              .sort((a, b) => a.qty > b.qty)
-              .sort((a, b) => a.name > b.name)
+              .sort((a, b) => a.price - b.price)
+              .sort((a, b) => a.qty - b.qty)
+              .sort((a, b) => (a.name > b.name ? 1 : a.name < b.name ? -1 : 0))
           )
         );
       });
@@ -164,7 +183,7 @@ describe("bookshelf-collection-query-mutation", () => {
           .orderBy("price")
           .fetchAll();
         expect(flatM(items)).toEqual(
-          flatD(data.filter(v => v.qty >= 2).sort((a, b) => a.price > b.price))
+          flatD(data.filter(v => v.qty >= 2).sort((a, b) => a.price - b.price))
         );
       });
 
@@ -177,7 +196,7 @@ describe("bookshelf-collection-query-mutation", () => {
           flatD(
             data
               .filter(v => v.qty >= 2 && v.price >= 2)
-              .sort((a, b) => a.price > b.price)
+              .sort((a, b) => a.price - b.price)
           )
         );
       });
@@ -192,7 +211,7 @@ describe("bookshelf-collection-query-mutation", () => {
             data
               .filter(v => v.price >= 2)
               .sort((a, b) => a.price > b.price)
-              .sort((a, b) => a.name > b.name)
+              .sort((a, b) => (a.name > b.name ? 1 : a.name < b.name ? -1 : 0))
           )
         );
       });
@@ -255,20 +274,24 @@ describe("bookshelf-collection-query-mutation", () => {
       test("select items order by name", async () => {
         let items = await new ListCollection().orderBy("name").fetch();
         expect(flatM(items)).toEqual(
-          flatD(data.sort((a, b) => a.name > b.name))
+          flatD(
+            data.sort((a, b) =>
+              a.name > b.name ? 1 : a.name < b.name ? -1 : 0
+            )
+          )
         );
       });
 
       test("select items order by price", async () => {
         let items = await new ListCollection().orderBy("price").fetch();
         expect(flatM(items)).toEqual(
-          flatD(data.sort((a, b) => a.price > b.price))
+          flatD(data.sort((a, b) => a.price - b.price))
         );
       });
 
       test("select items order by qty", async () => {
         let items = await new ListCollection().orderBy("qty").fetch();
-        expect(flatM(items)).toEqual(flatD(data.sort((a, b) => a.qty > b.qty)));
+        expect(flatM(items)).toEqual(flatD(data.sort((a, b) => a.qty - b.qty)));
       });
 
       test("select one order by name, qty, price", async () => {
@@ -278,9 +301,9 @@ describe("bookshelf-collection-query-mutation", () => {
         expect(flatM(items)).toEqual(
           flatD(
             data
-              .sort((a, b) => a.price > b.price)
-              .sort((a, b) => a.qty > b.qty)
-              .sort((a, b) => a.name > b.name)
+              .sort((a, b) => a.price - b.price)
+              .sort((a, b) => a.qty - b.qty)
+              .sort((a, b) => (a.name > b.name ? 1 : a.name < b.name ? -1 : 0))
           )
         );
       });
@@ -293,7 +316,7 @@ describe("bookshelf-collection-query-mutation", () => {
           .orderBy("price")
           .fetch();
         expect(flatM(items)).toEqual(
-          flatD(data.filter(v => v.qty >= 2).sort((a, b) => a.price > b.price))
+          flatD(data.filter(v => v.qty >= 2).sort((a, b) => a.price - b.price))
         );
       });
 
@@ -306,7 +329,7 @@ describe("bookshelf-collection-query-mutation", () => {
           flatD(
             data
               .filter(v => v.qty >= 2 && v.price >= 2)
-              .sort((a, b) => a.price > b.price)
+              .sort((a, b) => a.price - b.price)
           )
         );
       });
@@ -320,8 +343,23 @@ describe("bookshelf-collection-query-mutation", () => {
           flatD(
             data
               .filter(v => v.price >= 2)
-              .sort((a, b) => a.price > b.price)
-              .sort((a, b) => a.name > b.name)
+              .sort((a, b) => (a.name > b.name ? 1 : a.name < b.name ? -1 : 0))
+              .sort((a, b) => a.price - b.price)
+          )
+        );
+      });
+
+      test("select one price >= 2 and price is not null orderBy name, price", async () => {
+        let items = await new ListCollection()
+          .filter("price ge 2 and price sn null")
+          .orderBy("name, price")
+          .fetch();
+        expect(flatM(items)).toEqual(
+          flatD(
+            data
+              .filter(v => v.price >= 2 && v.price !== null)
+              .sort((a, b) => (a.name > b.name ? 1 : a.name < b.name ? -1 : 0))
+              .sort((a, b) => a.price - b.price)
           )
         );
       });
@@ -373,6 +411,20 @@ describe("bookshelf-collection-query-mutation", () => {
         let items = new ListCollection();
         expect(() => items.orderBy("price, id")).toThrow(
           "'id' is not allowed in Model."
+        );
+      });
+
+      test("not allowed values for is", () => {
+        let items = new ListCollection();
+        expect(() => items.filter("price is 1")).toThrow(
+          "'1' cant be used for is/sn in Model."
+        );
+      });
+
+      test("not allowed values for not is", () => {
+        let items = new ListCollection();
+        expect(() => items.filter("price sn 1")).toThrow(
+          "'1' cant be used for is/sn in Model."
         );
       });
     });

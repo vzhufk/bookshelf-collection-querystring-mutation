@@ -14,7 +14,9 @@ const FILTER_OPERATORS = {
   le: "<=",
   lk: "like",
   il: "ilike",
-  in: "in"
+  in: "in",
+  is: "is",
+  sn: "sn"
 };
 
 //JSEP pre config (I dont even know do I need it)
@@ -65,11 +67,6 @@ const bcqm = (Bookshelf, options) => {
             let operation = FILTER_OPERATORS[node.operator];
             let value = node.right.value;
 
-            // In Case it's array
-            if (node.right.type == "ArrayExpression") {
-              value = node.right.elements.map(v => v.value);
-            }
-
             if (!operation) {
               throw new Error(`'${node.operator}' operation is not available.`);
             }
@@ -80,6 +77,39 @@ const bcqm = (Bookshelf, options) => {
 
             if (allowed && !allowed.includes(field)) {
               throw new Error(`'${field}' is not allowed in Model.`);
+            }
+
+            // In Case it's array
+            if (node.right.type == "ArrayExpression") {
+              value = node.right.elements.map(v => v.value);
+            }
+
+            if (
+              [FILTER_OPERATORS.is, FILTER_OPERATORS.sn].includes(operation)
+            ) {
+              const NULL_VALUES = [
+                null,
+                undefined,
+                "null",
+                "NULL",
+                "undefined"
+              ];
+
+              if (!NULL_VALUES.includes(value)) {
+                throw new Error(`'${value}' cant be used for is/sn in Model.`);
+              }
+
+              if (FILTER_OPERATORS.is === operation) {
+                return qb => {
+                  qb.whereNull(field);
+                };
+              }
+
+              if (FILTER_OPERATORS.sn === operation) {
+                return qb => {
+                  qb.whereNotNull(field);
+                };
+              }
             }
 
             return qb => {
