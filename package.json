@@ -1,6 +1,6 @@
 {
   "name": "bookshelf-collection-querystring-mutation",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Filter and OrderBy DB Collections Plugin for Bookshelf",
   "main": "src/index.js",
   "author": {
