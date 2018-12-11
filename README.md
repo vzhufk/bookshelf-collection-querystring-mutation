@@ -79,7 +79,7 @@ Pattern: `field1 <operation> value [logical_opration] ...`
 | il                   | iLike                 | name il '%GG%'                                        |
 | in                   | in                    | name in ['GG', 'Salad']                               |
 | is                   | Is (null)             | price is null                                         |
-| ns                   | Is Not (null)         | price ns null                                         |
+| sn                   | Is Not (null)         | price sn null                                         |
 | Logical Operators    |                       |
 | and                  | Logical and           | price le 200 and price gt 3.5                         |
 | or                   | Logical or            | price le 3.5 or price gt 200                          |
